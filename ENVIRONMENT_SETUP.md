@@ -1,44 +1,38 @@
 # Environment Setup
 
-This project uses environment variables to securely store API keys. Follow these steps to set up your development environment:
+This project uses environment variables to securely store API keys. The setup uses user-specific Xcode schemes that are not tracked by git.
 
-## 1. Create Environment File
+## 1. Automatic Setup (Already Done)
 
-Create a `.env` file in the project root with your actual API keys:
+I've already set up a user-specific Xcode scheme with your API keys at:
+`routine-apps.xcodeproj/xcuserdata/$(whoami).xcuserdatad/xcschemes/routine-apps.xcscheme`
 
-```bash
-# Copy the template and add your real keys
-cp .env .env.local
-# Edit .env.local with your actual keys
-```
+This file contains your actual API keys and is automatically ignored by git (due to the `xcuserdata/` directory being in `.gitignore`).
 
-Your `.env` file should look like this:
-```
-REPLICATE_API_KEY=your_actual_replicate_key_here
-OPENROUTER_API_KEY=your_actual_openrouter_key_here
-```
+## 2. How It Works
 
-## 2. Xcode Configuration
-
-The Xcode scheme is already configured to use these environment variables. The scheme file references:
+### Shared Scheme (Safe for Git)
+The shared scheme at `routine-apps.xcodeproj/xcshareddata/xcschemes/routine-apps.xcscheme` uses placeholder references:
 - `$(REPLICATE_API_KEY)` 
 - `$(OPENROUTER_API_KEY)`
 
-## 3. Loading Environment Variables
+### User Scheme (Your Local Copy)
+Your personal scheme contains the actual API keys and is used by Xcode when you run the app.
 
-### Option A: Manual Export (Current Setup)
-Before running Xcode, export the variables in your terminal:
+## 3. For New Team Members
+
+When someone else clones this repo, they need to:
+
+1. Copy the shared scheme to their user directory:
 ```bash
-export REPLICATE_API_KEY="your_key_here"
-export OPENROUTER_API_KEY="your_key_here"
-open routine-apps.xcodeproj
+mkdir -p routine-apps.xcodeproj/xcuserdata/$(whoami).xcuserdatad/xcschemes
+cp routine-apps.xcodeproj/xcshareddata/xcschemes/routine-apps.xcscheme routine-apps.xcodeproj/xcuserdata/$(whoami).xcuserdatad/xcschemes/routine-apps.xcscheme
 ```
 
-### Option B: Using the Load Script
-You can source the environment variables:
+2. Edit their user-specific scheme with their own API keys:
 ```bash
-source load-env.sh
-open routine-apps.xcodeproj
+# Replace the $(REPLICATE_API_KEY) and $(OPENROUTER_API_KEY) placeholders with actual keys
+# in routine-apps.xcodeproj/xcuserdata/$(whoami).xcuserdatad/xcschemes/routine-apps.xcscheme
 ```
 
 ## 4. Accessing in Swift Code
